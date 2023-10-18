@@ -77,3 +77,47 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+# Jawaban A
+- Bagaimana Updown Btn Jika voters = 0 apakah disable ?
+- jika tinggi gambar seukuran dengan tinggi text, ketika text hanya 1 line gambar akan sangat kecil, bagaimana kalau kita kasih default height ? dan apakah ada kemungkinan jika user hanya mengupload gambar tanpa text ?
+
+# Jawaban C
+1. Struktur data
+ - User data => {nama, usia, gender, minat, foto profil}
+ - konesi => {dataUser yang terkoneksi dan komunitas}
+ - rekomendasi => {point, userdata, type= sport, religi, politik, dll}
+
+2. 
+- Jika tidak ada koneksi kita ambil dari data minat user, dan data minat user bisa kita dapatkan dengan memberikan form yang berkaitan dengan minat user, selain itu kita juga bisa menampilkan rekomendasi default dari sistem yang memiliki type yang berbeda-beda(Olahraga, religi, masak, dll) dan tentunya user akan berinteraksi dengan rekomendasi tersebut seperti contohnya like, dari itu pula kita akan mengetahui minat dari usernya
+- Jika terlalu banyak kita bisa membuat limit rekomendasi dan mensortnya by point rekomendasi. contoh rekomendasi yang berasal dari  koneksi pengguna akan mendapatkan point 100 dan yang berasal dari komunitas mendapatkan point 50, jadi setiap data rekomendasi akan memiliki data point yang nantinya kita sort dari urutan point tertinggi dan dibuat limit perhari agar user tidak bosan dengan rekomendasi yang sama setiap harinya. misal tampilkan 100 rekomendasi pertama untuk hari ke 1, lalu hari ke 2 kita tampilkan 100 rekomendasi ke 2 
+
+3. 
+a. untung menguji fitur ini kita memerluka beberapa user dengan kondisi yang berbeda 
+- user memiliki koneksi & komunitas
+- user hanya memiliki salah satu
+- user tidak memiliki semuanya
+b. ketika user tidak memilik semuanya, tampilkan data rekomendasi default lalu klik like atau add koneksi setelah itu kita akan memberikan data rekomendasi sesuai dengan type user rekomendasi yang di klik like/add koneksi 
+
+C2. Algoritma
+1. filter rekomendasi by teman koneksi
+ - identifikasi koneksi user yang memiliki kesamaan dengan user yang terkoneksi dengan userLogin {usia, minat, sering dikunjungi dll}
+ - berikan point di tiap user recomendasi per type kesamaan 
+ - urutkan dari yang paling besar & buat limit seperti pagination
+ - tampilkan
+2. filter rekomendasi by komunitas
+ - identifikasi koneksi user yang memiliki kesamaan komunitas dengan userLogin
+ - berikan point di tiap user rekomendasi kesamaan komunitas & yang memiliki kesamaan minat & komunitas sama diberi point lebih tinggi dibandingkan hanya memiliki kesamaan pada salah satunya
+ - urutkan dari yang paling besar & buat limit seperti pagination
+ - tampilkan
+3. filter rekomendasi by default jika tidak memiliki koneksi 
+ - identifikasi user top global(follower terbanyak/ postingan dengan voters) yang berbeda tiap minat nya
+ - lalu urutkan / grouping per type minat user 
+ - berikan point tertinggi untuk rekomendasi yang top global & minat yang sama
+ - urutkan by point
+ - tampilkan 
+
+
+
+
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   Image,
@@ -9,7 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import IconBack from '../assets/back.png';
 import IconBlock from '../assets/block.png';
@@ -19,9 +19,17 @@ import IconDownvoteInactive from '../assets/downvote_inactive.png';
 import IconShare from '../assets/share.png';
 import IconUpvoteActive from '../assets/upvote_active.png';
 import IconUpvoteInactive from '../assets/upvote_inactive.png';
+import {handleAddComment, handleDownvote, handleUpvote} from '../Helper';
 
 function PostDetailScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {data, index, setFeed, feed} = route.params;
+  const {text, voters, comment} = data;
+  const [totalVote, setVoters] = useState(voters);
+  const [content, setContent] = useState('');
+  const [comments, setComments] = useState(comment);
+
   return (
     <SafeAreaView>
       <ScrollView style={{marginBottom: 48}}>
@@ -60,15 +68,7 @@ function PostDetailScreen() {
           </View>
           <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
           <View>
-            <Text style={{margin: 24}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-              Integer et nunc ut tellus tinci, consectetur adipiscing elit.
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-            </Text>
+            <Text style={{margin: 24}}>{text}</Text>
             <Image
               source={{
                 uri: 'https://picsum.photos/200',
@@ -120,7 +120,11 @@ function PostDetailScreen() {
                 width={18}
                 style={{marginLeft: 22}}
               />
-              <Pressable onPress={() => console.log('downvote')}>
+              <Pressable
+                onPress={() => {
+                  setVoters(voters - 1);
+                  handleDownvote(index, feed, setFeed);
+                }}>
                 <Image
                   source={IconDownvoteInactive}
                   height={18}
@@ -134,9 +138,13 @@ function PostDetailScreen() {
                   marginHorizontal: 11,
                   textAlign: 'center',
                 }}>
-                0
+                {totalVote}
               </Text>
-              <Pressable onPress={() => console.log('upvote')}>
+              <Pressable
+                onPress={() => {
+                  setVoters(voters + 1);
+                  handleUpvote(index, feed, setFeed);
+                }}>
                 <Image
                   source={IconUpvoteInactive}
                   height={18}
@@ -148,107 +156,54 @@ function PostDetailScreen() {
           </View>
         </View>
         <View style={{height: 4, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
+        {comments.map((comments: any, i: number) => {
+          return (
+            <View key={i.toString()}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  minHeight: 72,
+                  paddingVertical: 16,
+                  paddingHorizontal: 24,
+                }}>
+                <Image
+                  source={{
+                    uri: 'https://picsum.photos/200',
+                  }}
+                  width={36}
+                  height={36}
+                  style={{borderRadius: 24, marginRight: 16}}
+                />
+                <View style={{width: '90%'}}>
+                  <Text
+                    style={{
+                      fontWeight: '600',
+                      fontSize: 12,
+                      lineHeight: 14.52,
+                      color: '#828282',
+                    }}>
+                    Usup Suparma
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: '400',
+                      fontSize: 16,
+                      lineHeight: 19.36,
+                    }}>
+                    {comments.content}
+                  </Text>
+                </View>
+              </View>
+              <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
+            </View>
+          );
+        })}
       </ScrollView>
+
       <View
         style={{
           position: 'absolute',
-          bottom: 20,
+          bottom: 0,
           height: 60,
           flexDirection: 'row',
           alignItems: 'center',
@@ -257,8 +212,19 @@ function PostDetailScreen() {
           zIndex: 10,
         }}>
         <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <TextInput placeholder="Enter Comment" style={{flex: 1}} />
-        <Button title="Comment" onPress={() => console.log('comment')} />
+        <TextInput
+          value={content}
+          onChange={(e: any) => setContent(e.target.value)}
+          placeholder="Enter Comment"
+          style={{flex: 1}}
+        />
+        <Button
+          title="Comment"
+          onPress={() => {
+            // handleAddComment(index, feed, setFeed, content);
+            setComments([...comments, {content: content}]);
+          }}
+        />
       </View>
     </SafeAreaView>
   );
